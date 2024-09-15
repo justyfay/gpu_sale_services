@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "fake-api-server"
+version = "0.1.0"
+description = "Сервер с фейковыми api-запросами магазинов, отдающих данные по видеокартам."
+authors = ["justyfay <sakura.ustinya@yandex.ru>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.112.1"
+uvicorn = "^0.30.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.flake8]
+max-line-length = 150
+extend-ignore = ["E203", "F821"]
+
+[tool.isort]
+profile="black"
+line_length=150
+
+[tool.pycln]
+all = true
