@@ -21,12 +21,14 @@ async def construct_updated_products_data_with_relationships(
                     PropertyGroupSchema.model_construct(
                         id=property_group.id,
                         name=property_group.name,
+                        product_id=product.id,
                         property_data=[
                             PropertySchema.model_construct(
                                 id=property_info.id,
                                 name=property_info.name,
                                 value=property_info.value,
                                 description=property_info.description,
+                                property_group_id=property_group.id,
                             )
                             for property_info in property_group.property
                         ],
@@ -47,12 +49,14 @@ async def construct_property_groups_with_relationships(
             PropertyGroupSchema.model_construct(
                 id=property_group.id,
                 name=property_group.name,
+                product_id=property_group.product_id,
                 property_data=[
                     PropertySchema.model_construct(
                         id=property_info.id,
                         name=property_info.name,
                         value=property_info.value,
                         description=property_info.description,
+                        property_group_id=property_group.id,
                     )
                     for property_info in property_group.property
                 ],
