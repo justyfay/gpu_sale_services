@@ -20,7 +20,7 @@ from src.tasks.celery_tasks.celery_app import celery as app
 #     return func
 
 
-@app.task(name="send_products_from_collector")
+@app.task(name="send_products_from_collector", queue="product_events")
 def send_products_from_collector():
     return asyncio.events.get_event_loop().run_until_complete(
         ConstructData.construct_product_data()

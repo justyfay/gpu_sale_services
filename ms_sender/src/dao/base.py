@@ -1,8 +1,8 @@
 from typing import Any, Optional, Tuple, Type
 
-from sqlalchemy import Result, RowMapping, Select, insert, select
+from sqlalchemy import Result, RowMapping, Select, insert, select, update
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.sql.dml import ReturningInsert
+from sqlalchemy.sql.dml import ReturningInsert, ReturningUpdate
 
 from src.database import Base, get_session_manager, query_compile
 from src.logger import get_logger
@@ -26,6 +26,22 @@ class BaseDAO:
             return result
 
     @classmethod
+    async def patch(cls, obj_id: int, **data):
+        async with get_session_manager() as manager:
+            query: ReturningUpdate[Tuple | Any] = (
+                update(cls.model)
+                .values(**data)
+                .where(cls.model.id == obj_id)  # noqa
+                .returning(cls.model.id)  # noqa
+            )
+            logger.debug(f"SQL Query: '{query_compile(query)}'")
+            query_execute: Result[Tuple | Any] = await manager.session.execute(query)
+            result: Optional[RowMapping] = query_execute.mappings().first()
+            logger.info(f"Result: '{result}'")
+            await manager.commit()
+            return result
+
+    @classmethod
     async def add(cls, **data) -> Optional[RowMapping] | None:
         msg: str = ""
         try:
@@ -39,7 +55,7 @@ class BaseDAO:
                 )
                 result: Optional[RowMapping] = query_execute.mappings().first()
                 logger.info(f"Result: '{result}'")
-                await manager.session.commit()
+                await manager.commit()
                 return result
         except (SQLAlchemyError, Exception) as e:
             if isinstance(e, SQLAlchemyError):

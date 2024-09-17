@@ -15,23 +15,20 @@ class UpdateProducts:
         products: RmqProductSchema = await self.consumer.get_messages()
         for product in products.root:
             if await ProductDAO.find_one_or_none(name=product.name) is None:
-                await ProductDAO.add(
-                    id=product.id,
+                added_product = await ProductDAO.add(
                     name=product.name,
                     description=product.description,
                     brand_name=product.brand_name,
                 )
                 for group in product.property_groups:
-                    await PropertyGroupDAO.add(
-                        id=group.id,
+                    added_property_group = await PropertyGroupDAO.add(
                         name=group.name,
-                        product_id=product.id,
+                        product_id=added_product["id"],
                     )
                     for property_info in group.property_data:
                         await PropertyDAO.add(
-                            id=property_info.id,
                             name=property_info.name,
                             value=property_info.value,
                             description=property_info.description,
-                            property_group_id=group.id,
+                            property_group_id=added_property_group["id"],
                         )

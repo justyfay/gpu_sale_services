@@ -28,12 +28,12 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.flake8]
-max-line-length = 150
+max-line-length = 130
 ignore = ["E203", "F821", "W503"]
 
 [tool.isort]
 profile="black"
-line_length=150
+line_length=130
 
 [tool.pycln]
 all = true

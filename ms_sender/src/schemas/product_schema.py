@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, RootModel
 
@@ -18,3 +18,19 @@ class ProductInfoFullSchema(ProductInfoBaseSchema):
 
 class ProductsSchema(RootModel):
     root: List[ProductInfoFullSchema]
+
+
+class ProductPostSchema(BaseModel):
+    name: str
+    brand_name: str
+    description: str
+
+
+class ProductPatchSchema(BaseModel):
+    name: Optional[str] = None
+    brand_name: Optional[str] = None
+    description: Optional[str] = None
+
+
+class ProductPatchResponseSchema(BaseModel):
+    id: int
