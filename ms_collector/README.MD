@@ -16,24 +16,15 @@ brew services start rabbitmq
 ```
 ## 2. Запуск сервиса
 Следующие команды запустят периодическую отправку данных по товарам в RMQ (включая предварительный сбор/обновление данных).
-### С помощью taskiq
-Рабочий вариант, будет отправлять по таймингу сообщения в указанную очередь.
-#####  FastStream (запустить для создания очереди и обменника):
-```
-faststream run src.tasks.fast_stream:app
-```
 #####  Планировщик:
 ```
-taskiq scheduler src.tasks.fast_stream:scheduler
+celery -A src.tasks.celery_app beat -l DEBUG
 ```
-### С помощью celery
-Не очень рабочий вариант. Будет отправлять сообщения, но каждый раз названием очереди выступает рандомный uuid.
+##### Worker
 ```
-celery -A src.tasks.celery_tasks.celery_app beat -l DEBUG
+celery -A src.tasks.celery_app worker -Q default
 ```
+##### Dashboard
 ```
-celery -A src.tasks.celery_tasks.celery_app worker
-```
-```
-celery -A src.tasks.celery_tasks.celery_app flower
+celery -A src.tasks.celery_app flower
 ```
