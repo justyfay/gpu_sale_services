@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Ustinya Golovkina <ugolovkina@ptsecurity.com>"]
 readme = "README.md"
+packages = [{include = "ms_sender", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -27,13 +28,7 @@ pyproject-flake8 = "^7.0.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.flake8]
-max-line-length = 130
-ignore = ["E203", "F821", "W503"]
-
-[tool.isort]
-profile="black"
-line_length=130
-
-[tool.pycln]
-all = true
+[tool.ruff]
+extend = "../pyproject.toml"
+src = ["src"]
+include = ["src/**.py", "tests/**.py"]

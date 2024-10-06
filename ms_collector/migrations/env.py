@@ -3,11 +3,11 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool, text
 
-from config import settings
-from src.database import Base
-from src.models.product import Product  # noqa
-from src.models.property import Property  # noqa
-from src.models.property_group import PropertyGroup  # noqa
+from ms_collector.config import settings
+from ms_collector.database import Base
+from ms_collector.models.product import Product  # noqa
+from ms_collector.models.property import Property  # noqa
+from ms_collector.models.property_group import PropertyGroup  # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

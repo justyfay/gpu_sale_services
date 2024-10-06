@@ -18,13 +18,13 @@ brew services start rabbitmq
 Следующие команды запустят периодическую отправку данных по товарам в RMQ (включая предварительный сбор/обновление данных).
 #####  Планировщик:
 ```
-celery -A src.tasks.celery_app beat -l DEBUG
-```
+celery -A ms_collector.tasks.celery_app beat -l DEBUG
+ ```
 ##### Worker
 ```
-celery -A src.tasks.celery_app worker -Q default
+celery -A ms_collector.tasks.celery_app worker -Q default
 ```
 ##### Dashboard
 ```
-celery -A src.tasks.celery_app flower
+celery -A ms_collector.tasks.celery_app flower
 ```

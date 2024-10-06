@@ -1,0 +1,83 @@
+[tool.poetry]
+name = "gpu-sale-services"
+version = "0.1.0"
+description = ""
+authors = ["justyfay <sakura.ustinya@yandex.ru>"]
+readme = "README.md"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+ruff = "*"
+pre-commit = "*"
+ms_collector = {path = "ms_collector", develop = true}
+ms_sender = {path = "ms_sender", develop = true}
+fake_api_server = {path = "fake_api_server", develop = true}
+
+[tool.mypy]
+python_version = "3.12"
+plugins = [
+  "pydantic.mypy"
+]
+follow_imports = "silent"
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+extend-exclude = ["*test*"]
+
+[tool.ruff.lint]
+extend-select = [
+	"E",
+	"W",
+	"Q",
+	"I", # isort
+	"F", # isort
+	"N", # pep8-naming
+	"UP",  # pyupgrade
+	"D",   # pydocstyle
+	"ASYNC", # flake8-async
+	"B", # flake8-bugbear
+	"COM", # flake8-commas
+	"C4", # flake8-comprehensions
+	"ANN", # flake8-annotations
+]
+fixable = [
+	"I", # isort
+	"UP006", # Use {} instead of {} for type annotation
+	"UP015", # Unnecessary open mode parameters
+	"C403", # Unnecessary `list` comprehension (rewrite as a `set` comprehension)
+	"C408", # Unnecessary `dict` call (rewrite as a literal)
+	"W291", # Trailing whitespace
+	"COM812", # Trailing comma missing
+	"ANN201", # Missing return type annotation for public function
+	"E501", #  Line too long
+]
+
+ignore = [
+	"D103", # Missing docstring in public package
+	"UP035", # Missing docstring in public package
+	"ANN003", # Missing type annotation
+	"D107", # Missing docstring in `__init__`
+	"D100", #  Missing docstring in public module
+	"D101", #  Missing docstring in public class
+	"D104", #  Missing docstring in public package
+	"D105", # Missing docstring in magic method
+	"ANN204", # Missing return type annotation for special method
+	"D102", # Missing docstring in public method
+	"ANN101", # Missing type annotation for `self` in method
+	"UP032", # Use f-string instead of `format` cal
+	"ANN102", # Missing type annotation for `cls` in classmethod
+	"B904", # Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None`
+	"ANN201", #  Missing return type annotation for public function `add_property`
+	"ANN401", # Dynamically typed expressions
+	"D415", # First line should end with a period, question mark, or exclamation point
+	"UP007", # Use `X | Y` for type annotations,
+	"D400", # First line should end with a period
+	"COM812", # Trailing comma missing
+]

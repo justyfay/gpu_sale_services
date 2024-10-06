@@ -3,6 +3,7 @@ name = "fake-api-server"
 version = "0.1.0"
 description = "Сервер с фейковыми api-запросами магазинов, отдающих данные по видеокартам."
 authors = ["justyfay <sakura.ustinya@yandex.ru>"]
+packages = [{include = "fake_api_server", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
