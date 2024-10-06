@@ -31,7 +31,7 @@ class Consumer:
         """Получение всех сообщений из очереди."""
         method_frame, header_frame, body = self.channel.basic_get(self.current_queue)
         if method_frame:
-            message: dict = json.loads(body.decode())
+            message: dict = json.loads(body.decode())[0][0]
             logger.debug(f"Get messages from queue: {message}")
             self.channel.basic_ack(method_frame.delivery_tag)
             return RmqProductSchema.model_validate(message)

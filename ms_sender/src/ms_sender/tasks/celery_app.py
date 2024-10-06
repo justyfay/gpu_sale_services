@@ -4,9 +4,9 @@ from ms_sender.config import settings
 
 celery: Celery = Celery(
     name="tasks",
-    broker=settings.broker_url,
-    # backend="rpc://",
-    include=["src.tasks.tasks"],
+    broker=settings.rmq_url,
+    backend=settings.redis_url,
+    include=["ms_sender.tasks.tasks"],
 )
 
 celery.conf.enable_utc = True

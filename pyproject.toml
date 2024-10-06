@@ -16,15 +16,7 @@ pre-commit = "*"
 ms_collector = {path = "ms_collector", develop = true}
 ms_sender = {path = "ms_sender", develop = true}
 fake_api_server = {path = "fake_api_server", develop = true}
-
-[tool.mypy]
-python_version = "3.12"
-plugins = [
-  "pydantic.mypy"
-]
-follow_imports = "silent"
-disallow_untyped_defs = true
-ignore_missing_imports = true
+redis = "^5.1.1"
 
 [tool.ruff]
 line-length = 110

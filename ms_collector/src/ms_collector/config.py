@@ -23,9 +23,13 @@ class Settings(BaseSettings):
 class CelerySettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="allow")
 
+    rmq_host: str
     rmq_user: str
     rmq_password: str
     rmq_vhost: str
+
+    redis_host: str
+    redis_port: int
 
     default_exchange_name: str
     default_queue_name: str
@@ -35,8 +39,12 @@ class CelerySettings(BaseSettings):
     product_events_routing_key: str
 
     @property
-    def broker_url(self) -> str:
-        return f"amqp://{self.rmq_user}:{self.rmq_password}@localhost/{self.rmq_vhost}"
+    def rmq_url(self) -> str:
+        return f"amqp://{self.rmq_user}:{self.rmq_password}@{self.rmq_host}/{self.rmq_vhost}"
+
+    @property
+    def redis_url(self) -> str:
+        return f"redis://{self.redis_host}:{self.redis_port}"
 
 
 settings = Settings()
