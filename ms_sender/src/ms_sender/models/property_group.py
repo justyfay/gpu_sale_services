@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from ms_sender.database import Base
+from src.ms_sender.database import Base
 
 
 class PropertyGroup(Base):
@@ -22,4 +22,8 @@ class PropertyGroup(Base):
     )
 
     def __str__(self):
-        return "{" + f'"id": "{self.id}", "name": "{self.name}"," product_id": "{self.product_id}"' + "}"
+        return (
+            "{"
+            + f'"id": "{self.id}", "name": "{self.name}"," product_id": "{self.product_id}"'
+            + "}"
+        )

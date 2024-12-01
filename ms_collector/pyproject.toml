@@ -16,12 +16,14 @@ httpx = "^0.27.0"
 loguru = "^0.7.2"
 sqlalchemy = "^2.0.32"
 alembic = "^1.13.2"
-asyncpg = "^0.29.0"
 greenlet = "^3.0.3"
 flower = "^2.0.1"
 pre-commit = "^3.8.0"
 celery = "^5.4.0"
 pyproject-flake8 = "^7.0.0"
+ruff = "^0.8.1"
+redis = "^5.2.0"
+asyncpg = "^0.30.0"
 
 
 [build-system]
@@ -29,6 +31,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-extend = "../pyproject.toml"
 src = ["src"]
 include = ["src/**.py", "tests/**.py"]

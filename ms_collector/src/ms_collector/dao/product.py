@@ -3,12 +3,12 @@ from typing import Any, Sequence
 from sqlalchemy import Result, RowMapping, select
 from sqlalchemy.orm import selectinload
 
-from ms_collector.dao.base import BaseDAO
-from ms_collector.database import Base, get_session_manager, query_compile
-from ms_collector.logger import get_logger
-from ms_collector.models.product import Product
-from ms_collector.models.property import Property  # noqa
-from ms_collector.models.property_group import PropertyGroup
+from src.ms_collector.dao.base import BaseDAO
+from src.ms_collector.database import Base, get_session_manager, query_compile
+from src.ms_collector.logger import get_logger
+from src.ms_collector.models.product import Product
+from src.ms_collector.models.property import Property  # noqa
+from src.ms_collector.models.property_group import PropertyGroup
 
 logger = get_logger()
 
@@ -24,7 +24,11 @@ class ProductDAO(BaseDAO):
         query = (
             select(Product)
             .filter_by(**filter_by)
-            .options(selectinload(Product.property_group).options(selectinload(PropertyGroup.property)))
+            .options(
+                selectinload(Product.property_group).options(
+                    selectinload(PropertyGroup.property)
+                )
+            )
         )
         async with get_session_manager() as manager:
             logger.debug(f"SQL Query: '{query_compile(query)}'")

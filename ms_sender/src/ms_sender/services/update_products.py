@@ -1,8 +1,8 @@
-from ms_sender.dao.product import ProductDAO
-from ms_sender.dao.property import PropertyDAO
-from ms_sender.dao.property_group import PropertyGroupDAO
-from ms_sender.rabbitmq.consumer import Consumer
-from ms_sender.schemas.messages.rmq_product_schema import RmqProductSchema
+from src.ms_sender.dao.product import ProductDAO
+from src.ms_sender.dao.property import PropertyDAO
+from src.ms_sender.dao.property_group import PropertyGroupDAO
+from src.ms_sender.rabbitmq.consumer import Consumer
+from src.ms_sender.schemas.messages.rmq_product_schema import RmqProductSchema
 
 
 class UpdateProducts:

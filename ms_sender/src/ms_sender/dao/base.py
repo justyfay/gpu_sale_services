@@ -4,8 +4,8 @@ from sqlalchemy import Result, RowMapping, Select, insert, select, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql.dml import ReturningInsert, ReturningUpdate
 
-from ms_sender.database import Base, get_session_manager, query_compile
-from ms_sender.logger import get_logger
+from src.ms_sender.database import Base, get_session_manager, query_compile
+from src.ms_sender.logger import get_logger
 
 logger = get_logger()
 
@@ -16,7 +16,9 @@ class BaseDAO:
     @classmethod
     async def find_one_or_none(cls, **filter_by) -> RowMapping | None:
         async with get_session_manager() as manager:
-            query: Select[tuple | Any] = select(cls.model.__table__.columns).filter_by(**filter_by)
+            query: Select[tuple | Any] = select(cls.model.__table__.columns).filter_by(
+                **filter_by
+            )
             logger.debug(f"SQL Query: '{query_compile(query)}'")
             query_execute: Result[tuple | Any] = await manager.session.execute(query)
             result: RowMapping | None = query_execute.mappings().one_or_none()
@@ -48,16 +50,22 @@ class BaseDAO:
             )
             logger.debug(f"SQL Query: '{query_compile(query)}'")
             async with get_session_manager() as manager:
-                query_execute: Result[tuple | Any] = await manager.session.execute(query)
+                query_execute: Result[tuple | Any] = await manager.session.execute(
+                    query
+                )
                 result: RowMapping | None = query_execute.mappings().first()
                 logger.info(f"Result: '{result}'")
                 await manager.commit()
                 return result
         except (SQLAlchemyError, Exception) as e:
             if isinstance(e, SQLAlchemyError):
-                msg: str = "Database Exc: Cannot insert data into table. Details: {}".format(e)
+                msg: str = (
+                    "Database Exc: Cannot insert data into table. Details: {}".format(e)
+                )
             elif isinstance(e, Exception):
-                msg: str = "Unknown Exc: Cannot insert data into table. Details: {}".format(e)
+                msg: str = (
+                    "Unknown Exc: Cannot insert data into table. Details: {}".format(e)
+                )
 
             logger.error(msg, extra={"table": cls.model.__tablename__}, exc_info=True)
             return None

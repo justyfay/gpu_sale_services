@@ -1,13 +1,13 @@
-from ms_collector.dao.product import ProductDAO
-from ms_collector.dao.property import PropertyDAO
-from ms_collector.dao.property_group import PropertyGroupDAO
-from ms_collector.schemas.main_product_data_schema import (
+from src.ms_collector.dao.product import ProductDAO
+from src.ms_collector.dao.property import PropertyDAO
+from src.ms_collector.dao.property_group import PropertyGroupDAO
+from src.ms_collector.schemas.main_product_data_schema import (
     MainProductDataSchema,
     Product,
     PropertiesGroupItem,
     Property,
 )
-from ms_collector.utils.http_client import HttpClient
+from src.ms_collector.utils.http_client import HttpClient
 
 
 class ServiceAdditionStorage:
@@ -17,11 +17,15 @@ class ServiceAdditionStorage:
         self.client = HttpClient()
 
     async def products(self) -> list[Product]:
-        results: MainProductDataSchema = await self.client.get_main_product_data_request()
+        results: MainProductDataSchema = (
+            await self.client.get_main_product_data_request()
+        )
         return results.data
 
     @staticmethod
-    async def _add_product_property(property_group_id: int, properties: list[Property]) -> None:
+    async def _add_product_property(
+        property_group_id: int, properties: list[Property]
+    ) -> None:
         for property_item in properties:
             if (
                 await PropertyDAO.find_one_or_none(
@@ -41,7 +45,9 @@ class ServiceAdditionStorage:
     ) -> None:
         for property_group in property_groups:
             if (
-                await PropertyGroupDAO.find_one_or_none(name=property_group.name, product_id=product_id)
+                await PropertyGroupDAO.find_one_or_none(
+                    name=property_group.name, product_id=product_id
+                )
                 is None
             ):
                 insert_property_group = await PropertyGroupDAO.add(

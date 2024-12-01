@@ -5,6 +5,5 @@
 __pycache__/
 .DS_Store
 /*.db
-*redis.conf
-third_party/redis/data
-!/third_party/redis/redis.conf
+**/celerybeat-schedule
+**/poetry.lock

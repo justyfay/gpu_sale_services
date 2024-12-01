@@ -1,13 +1,13 @@
-from ms_collector.dao.product import ProductDAO
-from ms_collector.dao.property import PropertyDAO
-from ms_collector.dao.property_group import PropertyGroupDAO
-from ms_collector.schemas.additional_product_data_schema import (
+from src.ms_collector.dao.product import ProductDAO
+from src.ms_collector.dao.property import PropertyDAO
+from src.ms_collector.dao.property_group import PropertyGroupDAO
+from src.ms_collector.schemas.additional_product_data_schema import (
     AdditionalProductDataSchema,
     Products,
     PropertiesGroupItem,
     Property,
 )
-from ms_collector.utils.http_client import HttpClient
+from src.ms_collector.utils.http_client import HttpClient
 
 
 class ServiceUpdateStorage:
@@ -17,11 +17,15 @@ class ServiceUpdateStorage:
         self.client = HttpClient()
 
     async def products(self) -> list[Products]:
-        results: AdditionalProductDataSchema = await self.client.get_additional_product_data_request()
+        results: AdditionalProductDataSchema = (
+            await self.client.get_additional_product_data_request()
+        )
         return results.data
 
     @staticmethod
-    async def _update_product_property(property_group_id: int, properties: list[Property]) -> None:
+    async def _update_product_property(
+        property_group_id: int, properties: list[Property]
+    ) -> None:
         for property_item in properties:
             if (
                 await PropertyDAO.find_one_or_none(
@@ -43,7 +47,9 @@ class ServiceUpdateStorage:
     ) -> None:
         for property_group in property_groups:
             if (
-                await PropertyGroupDAO.find_one_or_none(name=property_group.name, product_id=product_id)
+                await PropertyGroupDAO.find_one_or_none(
+                    name=property_group.name, product_id=product_id
+                )
                 is None
             ):
                 update_property_group = await PropertyGroupDAO.add(
@@ -57,10 +63,14 @@ class ServiceUpdateStorage:
 
     async def update_products(self) -> None:
         for product in await self.products():
-            product_info = await ProductDAO.find_one_or_none(name=product.product_info.name)
+            product_info = await ProductDAO.find_one_or_none(
+                name=product.product_info.name
+            )
             if product_info is not None:
                 await self._update_product_property_groups(
                     product_id=product_info.get("id"),
                     property_groups=product.product_info.properties_group,
                 )
-                await ProductDAO.patch(product_name=product.product_info.name, is_updated=True)
+                await ProductDAO.patch(
+                    product_name=product.product_info.name, is_updated=True
+                )

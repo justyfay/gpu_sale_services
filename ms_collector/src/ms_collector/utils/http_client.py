@@ -2,10 +2,12 @@ import time
 
 import httpx
 
-from ms_collector.config import settings
-from ms_collector.logger import get_logger
-from ms_collector.schemas.additional_product_data_schema import AdditionalProductDataSchema
-from ms_collector.schemas.main_product_data_schema import MainProductDataSchema
+from src.ms_collector.config import settings
+from src.ms_collector.logger import get_logger
+from src.ms_collector.schemas.additional_product_data_schema import (
+    AdditionalProductDataSchema,
+)
+from src.ms_collector.schemas.main_product_data_schema import MainProductDataSchema
 
 
 class HttpClient:
@@ -34,14 +36,18 @@ class HttpClient:
                 if response.status_code == 200:
                     return response
             except httpx.ConnectError as connect_error:
-                self.logger.error(f"Connect error for url '{url}'. Error: {connect_error}")
+                self.logger.error(
+                    f"Connect error for url '{url}'. Error: {connect_error}"
+                )
                 time.sleep(self.request_timeout)
                 if i == self.request_retries - 1:
                     raise httpx.ConnectError(
                         f"Failed connect to url '{url}' on '{i + 1}' try. Error: {connect_error}.'"
                     )
             except httpx.HTTPStatusError as http_status_error:
-                self.logger.error(f"Response error for url '{url}': {http_status_error}")
+                self.logger.error(
+                    f"Response error for url '{url}': {http_status_error}"
+                )
                 time.sleep(self.request_timeout)
                 if i == self.request_retries - 1:
                     raise httpx.ConnectError(
@@ -58,12 +64,20 @@ class HttpClient:
 
     async def get_main_product_data_request(self) -> MainProductDataSchema:
         """Запрос для получения основной информации по товарам."""
-        self.logger.debug(f"Send GET request to 'NetVideoData': '{self.main_products_info_service_url}'")
-        response = self._make_request(url=self.main_products_info_service_url, headers=self._headers)
+        self.logger.debug(
+            f"Send GET request to 'NetVideoData': '{self.main_products_info_service_url}'"
+        )
+        response = self._make_request(
+            url=self.main_products_info_service_url, headers=self._headers
+        )
         return MainProductDataSchema.model_validate(response.json())
 
     async def get_additional_product_data_request(self) -> AdditionalProductDataSchema:
         """Запрос для получения дополнительной информации по товарам."""
-        self.logger.debug(f"Send GET request to 'CountryLink': '{self.additional_products_info_service_url}'")
-        response = self._make_request(url=self.additional_products_info_service_url, headers=self._headers)
+        self.logger.debug(
+            f"Send GET request to 'CountryLink': '{self.additional_products_info_service_url}'"
+        )
+        response = self._make_request(
+            url=self.additional_products_info_service_url, headers=self._headers
+        )
         return AdditionalProductDataSchema.model_validate(response.json())

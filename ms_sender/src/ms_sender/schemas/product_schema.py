@@ -1,6 +1,6 @@
 from pydantic import BaseModel, RootModel
 
-from ms_sender.schemas.property_group_schema import PropertyGroupSchema
+from src.ms_sender.schemas.property_group_schema import PropertyGroupSchema
 
 
 class ProductInfoBaseSchema(BaseModel):

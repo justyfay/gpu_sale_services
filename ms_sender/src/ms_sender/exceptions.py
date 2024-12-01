@@ -27,7 +27,9 @@ class ProductAddFailed(SenderException):
 
 class PropertyGroupAlreadyExists(SenderException):
     status_code: int = status.HTTP_409_CONFLICT
-    detail: str = "Группа характеристик с таким именем для указанного товара уже существует"
+    detail: str = (
+        "Группа характеристик с таким именем для указанного товара уже существует"
+    )
 
 
 class PropertyGroupAddFailed(SenderException):

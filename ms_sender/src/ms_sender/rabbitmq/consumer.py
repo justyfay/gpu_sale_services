@@ -2,9 +2,9 @@ import json
 
 import pika
 
-from ms_sender.config import settings
-from ms_sender.logger import get_logger
-from ms_sender.schemas.messages.rmq_product_schema import RmqProductSchema
+from src.ms_sender.config import settings
+from src.ms_sender.logger import get_logger
+from src.ms_sender.schemas.messages.rmq_product_schema import RmqProductSchema
 
 logger = get_logger()
 

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Path
 from starlette import status
 
-from ms_sender.dao.property import PropertyDAO
-from ms_sender.exceptions import PropertyAddFailed, PropertyAlreadyExists
-from ms_sender.schemas.property_schema import (
+from src.ms_sender.dao.property import PropertyDAO
+from src.ms_sender.exceptions import PropertyAddFailed, PropertyAlreadyExists
+from src.ms_sender.schemas.property_schema import (
     PropertyPatchResponseSchema,
     PropertyPatchSchema,
     PropertyPostSchema,
@@ -58,7 +58,9 @@ async def edit_property_group(
         name=property_group_data.name,
     ):
         raise PropertyAlreadyExists
-    result = await PropertyDAO.patch(obj_id=property_id, **property_group_data.model_dump(exclude_none=True))
+    result = await PropertyDAO.patch(
+        obj_id=property_id, **property_group_data.model_dump(exclude_none=True)
+    )
     return result
 
 

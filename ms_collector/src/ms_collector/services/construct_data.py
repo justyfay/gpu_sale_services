@@ -1,11 +1,11 @@
-from ms_collector.dao.product import ProductDAO
-from ms_collector.schemas.construct_product_schema import (
+from src.ms_collector.dao.product import ProductDAO
+from src.ms_collector.schemas.construct_product_schema import (
     ConstructProductData,
     PropertyData,
     PropertyGroupData,
 )
-from ms_collector.services.service_addition_storage import ServiceAdditionStorage
-from ms_collector.services.service_update_storage import ServiceUpdateStorage
+from src.ms_collector.services.service_addition_storage import ServiceAdditionStorage
+from src.ms_collector.services.service_update_storage import ServiceUpdateStorage
 
 
 class ConstructData:
@@ -15,7 +15,9 @@ class ConstructData:
     async def construct_product_data() -> list[dict]:
         await ServiceAdditionStorage().add_products()
         await ServiceUpdateStorage().update_products()
-        products = await ProductDAO.get_updated_products_with_relationships(is_updated=True)
+        products = await ProductDAO.get_updated_products_with_relationships(
+            is_updated=True
+        )
         products_data_json: list[dict] = []
         for product in products:
             product_model = ConstructProductData.model_construct(

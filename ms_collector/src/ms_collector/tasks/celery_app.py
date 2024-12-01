@@ -3,13 +3,13 @@ from datetime import timedelta
 from celery import Celery
 from kombu import Exchange, Queue
 
-from ms_collector.config import celery_settings
+from src.ms_collector.config import celery_settings
 
 celery: Celery = Celery(
     name="tasks",
     broker=celery_settings.rmq_url,
     result_backend=celery_settings.redis_url,
-    include=["ms_collector.tasks.tasks"],
+    include=["src.ms_collector.tasks.tasks"],
 )
 celery.conf.enable_utc = True
 celery.conf.timezone = "UTC"
@@ -37,5 +37,5 @@ celery.conf.task_routes = {
 }
 
 celery.conf.beat_schedule = {
-    "task_run": {"task": "task_run", "schedule": timedelta(minutes=10), "options": {"queue": default_queue}}
+    "task_run": {"task": "task_run", "schedule": timedelta(minutes=2), "options": {"queue": default_queue}}
 }

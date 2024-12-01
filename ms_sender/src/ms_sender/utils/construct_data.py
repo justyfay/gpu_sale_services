@@ -2,9 +2,12 @@ from typing import Sequence
 
 from sqlalchemy import RowMapping
 
-from ms_sender.schemas.product_schema import ProductInfoFullSchema, ProductsSchema
-from ms_sender.schemas.property_group_schema import PropertyGroupSchema, PropertyGroupsSchema
-from ms_sender.schemas.property_schema import PropertySchema
+from src.ms_sender.schemas.product_schema import ProductInfoFullSchema, ProductsSchema
+from src.ms_sender.schemas.property_group_schema import (
+    PropertyGroupSchema,
+    PropertyGroupsSchema,
+)
+from src.ms_sender.schemas.property_schema import PropertySchema
 
 
 async def construct_updated_products_data_with_relationships(

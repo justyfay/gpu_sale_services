@@ -2,18 +2,22 @@ from fastapi import APIRouter, Path, Query
 from fastapi_pagination import Page, paginate
 from starlette import status
 
-from ms_sender.dao.property_group import PropertyGroupDAO
-from ms_sender.exceptions import PropertyGroupAddFailed, PropertyGroupAlreadyExists
-from ms_sender.schemas.property_group_schema import (
+from src.ms_sender.dao.property_group import PropertyGroupDAO
+from src.ms_sender.exceptions import PropertyGroupAddFailed, PropertyGroupAlreadyExists
+from src.ms_sender.schemas.property_group_schema import (
     PropertyGroupPatchResponseSchema,
     PropertyGroupPatchSchema,
     PropertyGroupPostSchema,
     PropertyGroupSchema,
     PropertyGroupsSchema,
 )
-from ms_sender.utils.construct_data import construct_property_groups_with_relationships
+from src.ms_sender.utils.construct_data import (
+    construct_property_groups_with_relationships,
+)
 
-property_group_router = APIRouter(prefix="/property_groups", tags=["Группы характеристик"])
+property_group_router = APIRouter(
+    prefix="/property_groups", tags=["Группы характеристик"]
+)
 
 
 @property_group_router.post(
@@ -56,7 +60,9 @@ async def edit_property_group(
         product_id=property_group_data.product_id, name=property_group_data.name
     ):
         raise PropertyGroupAlreadyExists
-    result = await PropertyGroupDAO.patch(obj_id=property_group_id, **property_group_data.model_dump())
+    result = await PropertyGroupDAO.patch(
+        obj_id=property_group_id, **property_group_data.model_dump()
+    )
     return result
 
 
@@ -80,9 +86,13 @@ async def get_groups_with_property() -> Page[PropertyGroupSchema]:
     description="Получение групп характеристик по имени.",
 )
 async def search_groups_by_name(
-    property_group_name: str = Query(default="Видеокарта", description="Название группы характеристик"),
+    property_group_name: str = Query(
+        default="Видеокарта", description="Название группы характеристик"
+    ),
 ) -> Page[PropertyGroupSchema]:
-    results = await PropertyGroupDAO.get_property_groups_with_relationships(name=property_group_name)
+    results = await PropertyGroupDAO.get_property_groups_with_relationships(
+        name=property_group_name
+    )
     return paginate(await construct_property_groups_with_relationships(results))
 
 
@@ -96,5 +106,7 @@ async def search_groups_by_name(
 async def product_property_groups(
     product_id: int = Path(description="Идентификатор продукта"),
 ):
-    results = await PropertyGroupDAO.get_property_groups_with_relationships(product_id=product_id)
+    results = await PropertyGroupDAO.get_property_groups_with_relationships(
+        product_id=product_id
+    )
     return await construct_property_groups_with_relationships(results)

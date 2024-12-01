@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ms_sender.routers.v1 import v1_router
+from src.ms_sender.routers.v1 import v1_router
 
 api_router = APIRouter(prefix="/api")
 

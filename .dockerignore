@@ -1,0 +1,14 @@
+.dockerignore
+.env
+.git*
+README.md
+
+**/__pycache__/
+**/.env
+**/.venv
+**/env/
+**/venv/
+
+**/.idea
+
+**/celerybeat-schedule

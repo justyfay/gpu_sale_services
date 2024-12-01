@@ -1,0 +1,165 @@
+version: '1.0'
+
+services:
+  rabbit:
+    container_name: rabbit_service
+    image: rabbitmq:3.12.10-management
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST}
+
+  redis:
+    container_name: redis_service
+    image: redis:7.0.11-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+
+  postgres:
+    container_name: postgres_service
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  pgadmin:
+    container_name: pgadmin_service
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+
+  fake_api_server:
+    image: fake_api_server:latest
+    container_name: fake_api_server
+    restart: unless-stopped
+    build:
+      context: fake_api_server/
+    ports:
+      - "8000:8000"
+    command: ["/fake_api_server/scripts/run.sh"]
+
+  ms_collector:
+    image: ms_collector:latest
+    container_name: ms_collector
+    build:
+      context: ms_collector/
+    env_file:
+      - ms_collector/.env
+    environment:
+      PGHOST: ${POSTGRES_DB}
+      PGPORT: ${POSTGRES_PORT}
+      PGDATABASE: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - postgres
+      - rabbit
+      - redis
+    command: bash -c "poetry run alembic upgrade head"
+
+  celery_ms_collector:
+    image: celery:4.0
+    build:
+      context: ms_collector/
+    container_name: celery_ms_collector
+    command: [ "/ms_collector/scripts/celery.sh", "celery" ]
+    env_file:
+      - ms_collector/.env
+    environment:
+      PGHOST: ${POSTGRES_DB}
+      PGPORT: ${POSTGRES_PORT}
+      PGDATABASE: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - redis
+
+  celery_beat_ms_collector:
+    image: celery:4.0
+    build:
+      context:  ms_collector/
+    container_name: celery_beat_ms_collector
+    command: [ "/ms_collector/scripts/celery.sh", "celery_beat" ]
+    env_file:
+      - ms_collector/.env
+    environment:
+      PGHOST: ${POSTGRES_DB}
+      PGPORT: ${POSTGRES_PORT}
+      PGDATABASE: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - redis
+
+  ms_sender:
+    image: ms_sender:latest
+    container_name: ms_sender
+    build:
+      context: ms_sender/
+    env_file:
+      - ms_sender/.env
+    environment:
+      PGHOST: ${POSTGRES_DB}
+      PGPORT: ${POSTGRES_PORT}
+      PGDATABASE: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8001:8001"
+    depends_on:
+      - postgres
+      - rabbit
+      - redis
+    command: [ "/ms_sender/scripts/run.sh"]
+
+  celery_ms_sender:
+    image: celery:latest
+    build:
+      context: ms_sender/
+    container_name: celery_ms_sender
+    command: [ "/ms_sender/scripts/celery.sh", "celery" ]
+    env_file:
+      - ms_sender/.env
+    environment:
+      PGHOST: ${POSTGRES_DB}
+      PGPORT: ${POSTGRES_PORT}
+      PGDATABASE: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - redis
+
+  celery_beat_ms_sender:
+    image: celery:latest
+    build:
+      context: ms_sender/
+    container_name: celery_beat_ms_sender
+    command: [ "/ms_sender/scripts/celery.sh", "celery_beat" ]
+    env_file:
+      - ms_sender/.env
+    environment:
+      PGHOST: ${POSTGRES_DB}
+      PGPORT: ${POSTGRES_PORT}
+      PGDATABASE: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - redis

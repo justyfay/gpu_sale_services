@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi_pagination import add_pagination
 from fastapi_pagination.utils import disable_installed_extensions_check
 
-from ms_sender.routers.__init__ import api_router
+from src.ms_sender.routers.__init__ import api_router
 
 app: FastAPI = FastAPI(
     title="Sender",

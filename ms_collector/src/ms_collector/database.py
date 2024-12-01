@@ -3,13 +3,18 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 from sqlalchemy import CTE, DateTime, MetaData, Select
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 from sqlalchemy.orm import Mapped, declarative_base, mapped_column
 from sqlalchemy.sql.compiler import SQLCompiler
 from sqlalchemy.sql.dml import ReturningInsert, ReturningUpdate
 
-from ms_collector.config import settings
-from ms_collector.logger import get_logger
+from src.ms_collector.config import settings
+from src.ms_collector.logger import get_logger
 
 logger = get_logger()
 
@@ -33,8 +38,12 @@ Base = declarative_base(metadata=MetaData(schema="collector"))
 class BaseModel:
     """Базовая модель, от которой можно наследовать остальные модели."""
 
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(UTC).replace(tzinfo=None))
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(UTC).replace(tzinfo=None))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.now(UTC).replace(tzinfo=None)
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.now(UTC).replace(tzinfo=None)
+    )
 
 
 class SessionContextManager:
@@ -73,5 +82,7 @@ def query_compile(
     :param query: SQL-запрос
     :return :class:`SQLCompiler` - скомпилированный SQL-запрос.
     """
-    sql_compile: SQLCompiler = query.compile(engine.engine, compile_kwargs={"literal_binds": True})
+    sql_compile: SQLCompiler = query.compile(
+        engine.engine, compile_kwargs={"literal_binds": True}
+    )
     return sql_compile

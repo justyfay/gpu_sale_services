@@ -2,7 +2,7 @@
 name = "ms-sender"
 version = "0.1.0"
 description = ""
-authors = ["Ustinya Golovkina <ugolovkina@ptsecurity.com>"]
+authors = ["justyfay <sakura.ustinya@yandex.ru>"]
 readme = "README.md"
 packages = [{include = "ms_sender", from = "src"}]
 
@@ -22,6 +22,9 @@ celery = "^5.4.0"
 flower = "^2.0.1"
 fastapi-pagination = "^0.12.27"
 pyproject-flake8 = "^7.0.0"
+ruff = "^0.8.1"
+redis = "^5.2.0"
+gunicorn = "^23.0.0"
 
 
 [build-system]
@@ -29,6 +32,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-extend = "../pyproject.toml"
 src = ["src"]
 include = ["src/**.py", "tests/**.py"]

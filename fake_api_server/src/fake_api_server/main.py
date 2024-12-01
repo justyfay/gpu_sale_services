@@ -2,8 +2,8 @@ import uvicorn
 from fastapi import APIRouter, FastAPI, Query
 from starlette import status
 
-from fake_api_server.heplers.data.country_link_data import country_link_data
-from fake_api_server.heplers.data.net_video_data import net_video_data
+from src.fake_api_server.heplers.data.country_link_data import country_link_data
+from src.fake_api_server.heplers.data.net_video_data import net_video_data
 
 app: FastAPI = FastAPI(
     title="FakeApiServer",

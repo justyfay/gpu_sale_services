@@ -2,10 +2,14 @@ from fastapi import APIRouter, Path, Query
 from fastapi_pagination import Page, paginate
 from starlette import status
 
-from ms_sender.dao.product import ProductDAO
-from ms_sender.exceptions import ProductAddFailed, ProductAlreadyExists, ProductNotExists
-from ms_sender.schemas.brand_schema import BrandsSchema
-from ms_sender.schemas.product_schema import (
+from src.ms_sender.dao.product import ProductDAO
+from src.ms_sender.exceptions import (
+    ProductAddFailed,
+    ProductAlreadyExists,
+    ProductNotExists,
+)
+from src.ms_sender.schemas.brand_schema import BrandsSchema
+from src.ms_sender.schemas.product_schema import (
     ProductInfoBaseSchema,
     ProductInfoFullSchema,
     ProductPatchResponseSchema,
@@ -13,7 +17,9 @@ from ms_sender.schemas.product_schema import (
     ProductPostSchema,
     ProductsSchema,
 )
-from ms_sender.utils.construct_data import construct_updated_products_data_with_relationships
+from src.ms_sender.utils.construct_data import (
+    construct_updated_products_data_with_relationships,
+)
 
 product_router = APIRouter(prefix="/product", tags=["Товары"])
 
@@ -55,7 +61,9 @@ async def edit_product(
     current_product = await ProductDAO.find_one_or_none(id=product_id)
     if current_product is None:
         raise ProductNotExists
-    result = await ProductDAO.patch(obj_id=product_id, **product_data.model_dump(exclude_none=True))
+    result = await ProductDAO.patch(
+        obj_id=product_id, **product_data.model_dump(exclude_none=True)
+    )
     return ProductPatchResponseSchema.model_validate(result)
 
 
@@ -108,5 +116,7 @@ async def get_product_by_id(
 ) -> ProductsSchema:
     result = await ProductDAO.get_updated_products_with_relationships(id=product_id)
 
-    construct_result_data = await construct_updated_products_data_with_relationships(result)
+    construct_result_data = await construct_updated_products_data_with_relationships(
+        result
+    )
     return ProductsSchema.model_validate(construct_result_data)

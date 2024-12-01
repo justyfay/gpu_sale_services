@@ -1,7 +1,7 @@
 import uuid
 from collections import namedtuple
 
-from fake_api_server.heplers.data.gpu_cards_random_data import gen_gpu_details_data
+from src.fake_api_server.heplers.data.gpu_cards_random_data import gen_gpu_details_data
 
 
 def country_link_data(limit: int) -> list[dict]:

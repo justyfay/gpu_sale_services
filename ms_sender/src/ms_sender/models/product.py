@@ -2,7 +2,7 @@ from typing import List
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from ms_sender.database import Base
+from src.ms_sender.database import Base
 
 
 class Product(Base):
@@ -21,5 +21,6 @@ class Product(Base):
     def __str__(self):
         return (
             "{" + f'"id": "{self.id}", "name": "{self.name}", '
-            f'"brand_name": "{self.brand_name}", "description": "{self.description}"' + "}"
+            f'"brand_name": "{self.brand_name}", "description": "{self.description}"'
+            + "}"
         )

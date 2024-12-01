@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from ms_sender.database import Base
+from src.ms_sender.database import Base
 
 
 class Property(Base):

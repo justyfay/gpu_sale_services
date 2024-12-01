@@ -1,13 +1,18 @@
 from __future__ import annotations
 
 from sqlalchemy import CTE, MetaData, Select
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql.compiler import SQLCompiler
 from sqlalchemy.sql.dml import ReturningInsert, ReturningUpdate
 
-from ms_sender.config import settings
-from ms_sender.logger import get_logger
+from src.ms_sender.config import settings
+from src.ms_sender.logger import get_logger
 
 logger = get_logger()
 
@@ -57,5 +62,7 @@ def query_compile(
     :param query: SQL-запрос
     :return :class:`SQLCompiler` - скомпилированный SQL-запрос.
     """
-    sql_compile: SQLCompiler = query.compile(engine.engine, compile_kwargs={"literal_binds": True})
+    sql_compile: SQLCompiler = query.compile(
+        engine.engine, compile_kwargs={"literal_binds": True}
+    )
     return sql_compile
